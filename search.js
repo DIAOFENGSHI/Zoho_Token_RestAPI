@@ -21,6 +21,8 @@ async function fetchToken() {
     .then((response) => response.text())
     .then((cred) => {
       cred_process = JSON.parse(cred);
+      // if the token exists
+      // filling the token in form auto..
       if (cred_process.token != undefined) {
         addElement(cred_process.token);
       }
@@ -41,6 +43,8 @@ async function fetchName() {
     .then((response) => response.text())
     .then((name) => {
       console.log(name);
+      // if the name or error information exists
+      // filling it in form auto..
       if (name != undefined) {
         addName(name);
       }

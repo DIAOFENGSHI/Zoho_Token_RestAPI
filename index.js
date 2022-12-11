@@ -28,6 +28,8 @@ async function fetchCredential() {
     .then((response) => response.text())
     .then((cred) => {
       cred_process = JSON.parse(cred);
+      // if the user information exist
+      // filling these information in form auto..
       if (cred_process.id != undefined) {
         addElement(cred_process);
       }

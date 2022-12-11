@@ -4,6 +4,8 @@ const path = require("path");
 var FormData = require("form-data");
 const app = express();
 const port = process.env.PORT || 8080;
+
+// use the short memory to store information
 var id = undefined;
 var secret = undefined;
 var token = undefined;
@@ -46,6 +48,8 @@ app.get("/toZoho", function (req, res) {
   console.log(req.query);
   id = req.query.id;
   secret = req.query.secret;
+  // redirect to the zoho authentication page
+  // the page will redirect back automatically after the authentication being checked
   res
     .status(301)
     .redirect(
@@ -54,14 +58,18 @@ app.get("/toZoho", function (req, res) {
 });
 
 app.get("/toToken", async function (req, res) {
+  // get the url of query page
   const url = req.url;
   const url_processed = url.split("=")[1];
   const code = url_processed.split("&")[0];
+  // fetch and store the access token
   token = await fetchToken(id, secret, code);
+  // response the static page again, the token will be caught
   res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 async function searchNameByEmail() {
+  // REST API to query Zoho information
   var config = {
     method: "get",
     url: `https://www.zohoapis.com.au/crm/v2/Contacts/search?email=${email}`,
@@ -87,7 +95,7 @@ async function fetchToken(id, secret, code) {
   data.append("client_secret", secret);
   data.append("redirect_uri", "http://localhost:8080/toToken");
   data.append("code", code);
-
+  // fetch access token
   var config = {
     method: "post",
     url: "https://accounts.zoho.com.au/oauth/v2/token",
